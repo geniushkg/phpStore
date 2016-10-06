@@ -10,6 +10,9 @@ require '.././libs/Slim/Slim.php';
 //Creating a slim instance
 $app = new \Slim\Slim();
 
+
+
+
 //Method to display response
 function echoResponse($status_code, $response)
 {
@@ -79,4 +82,53 @@ function verifyRequiredParams($required_fields)
         $app->stop();
     }
 }
+
+
+//todo : method to get debt hour for given userid
+
+
+//todo : method to update debt hour for given userid
+//todo : method to insert new user with userid and debt
+
+$app->post('/createuser', function () use ($app) {
+ 
+    //Verifying the required parameters
+    verifyRequiredParams(array('id', 'debt'));
+ 
+    //Creating a response array
+    $response = array();
+ 
+    //reading post parameters
+    $id = $app->request->post('id');
+    $debt = $app->request->post('debt');
+ 
+    //Creating a DbOperation object
+    $db = new DbOperation();
+ 
+    //Calling the method create user with debt 
+    $res = $db->createUserWithDebt($id,$debt);
+ 
+    //If the result returned is 0 means success
+    if ($res == 0) {
+        //Making the response error false
+        $response["error"] = false;
+        //Adding a success message
+        $response["message"] = "New user successfully created";
+        //Displaying response
+        echoResponse(201, $response);
+ 
+    //If the result returned is 1 means failure
+    } else if ($res == 1) {
+        $response["error"] = true;
+        $response["message"] = "Oops! An error occurred while registereing";
+        echoResponse(200, $response);
+ 
+    //If the result returned is 2 means user already exist
+    } else if ($res == 2) {
+        $response["error"] = true;
+        $response["message"] = "Sorry, this user already existed";
+        echoResponse(200, $response);
+    }
+});
+
 $app->run();
