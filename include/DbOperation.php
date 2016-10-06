@@ -1,13 +1,11 @@
 <?php
  
-class DbOperation
-{
+class DbOperation {
     //Database connection link
     private $con;
  
     //Class constructor
-    function __construct()
-    {
+    function __construct() {
         //Getting the DbConnect.php file
         require_once dirname(__FILE__) . '/DbConnect.php';
  
@@ -65,10 +63,18 @@ class DbOperation
             return 2;
 			}
 		}
-	//todo: add method to modify debt hours for given user id
-	
-	
-	
+		
+		//this method will update given userid debt
+		public function modifyDebt($userId,$debt){
+			$stmt = $this->con->prepare("UPDATE debt_hour SET debt_hour=? WHERE user_id=?");
+			$stmt->bind_param("ii",$debt,$userId);
+			$stmt->execute();
+				if($this->db->affected_rows() >= 0){ 
+					return true;
+				}else{
+					return false;
+				}
+		}
 	
 	//todo: add method to check if user already exits
 	private function isUserExits($userId){
@@ -80,7 +86,4 @@ class DbOperation
         $stmt->close();
         return $num_rows > 0;
 	}
- 
-}
-
-?>
+} ?>
