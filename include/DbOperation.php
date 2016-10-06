@@ -19,20 +19,32 @@ class DbOperation
         $this->con = $db->connect();
     }
 	
-	//todo: add methods to fetch debt hours for given userid
+		
+		
+		//this method will return debt for given userid
+		public function getStudent($userId){
+			$stmt = $this->con->prepare("SELECT debt_hour FROM userdata WHERE user_id=?");
+			$stmt->bind_param("i",$userId);
+			$stmt->execute();
+			//Getting the student result array
+			$student = $stmt->get_result()->fetch_assoc();
+			$stmt->close();
+			//returning the student
+			return $student;
+		}
 
-	//todo: add method to add new userid and debt hours for new user
-	    // this will create a new user with default 10hours debt 
-	    public function createUserWithDebt($userId){
+		
+	    // this will create a new user with  debt 
+	    public function createUserWithDebt($userId,$debt_hour){
  
         //First we will check whether the student is already registered or not
-        if (!$this->isUserExits($userId)) {
+			if (!$this->isUserExits($userId)) {
            
             //Crating an statement
-            $stmt = $this->con->prepare("INSERT INTO students(name, username, password, api_key) values(?, ?, ?, ?)");
+            $stmt = $this->con->prepare("INSERT INTO userdata(user_id, debt_hour) values(?, ?)");
  
             //Binding the parameters
-            $stmt->bind_param("ssss", $name, $username, $password, $apikey);
+            $stmt->bind_param("ii", $userId,$debt_hour);
  
             //Executing the statment
             $result = $stmt->execute();
@@ -40,20 +52,22 @@ class DbOperation
             //Closing the statment
             $stmt->close();
  
-            //If statment executed successfully
-            if ($result) {
-                //Returning 0 means student created successfully
-                return 0;
-            } else {
-                //Returning 1 means failed to create student
-                return 1;
-            }
-        } else {
+				//If statment executed successfully
+				if ($result) {
+					//Returning 0 means user created successfully
+					return 0;
+				} else {
+					//Returning 1 means failed to create user
+					return 1;
+				}
+			} else {
             //returning 2 means user already exist in the database
             return 2;
-        }
-    }
+			}
+		}
 	//todo: add method to modify debt hours for given user id
+	
+	
 	
 	
 	//todo: add method to check if user already exits
