@@ -84,7 +84,7 @@ function verifyRequiredParams($required_fields)
 }
 
 
-	//todo : method to get debt hour for given userid
+	//this method will get debt hour for given userid
 	$app->post('/updateuser', function () use ($app) {
 	 
 		//Verifying the required parameters
@@ -121,10 +121,41 @@ function verifyRequiredParams($required_fields)
 		}
 	});
 
-	//todo : method to update debt hour for given userid
+	//this method will update debt hour for given userid
 	
+	$app->post('/userdebt',function() use ($app){
+    //verifying required parameters
+    verifyRequiredParams(array('id'));
+
+    //getting post values
+    $id = $app->request->post('id');
+    
+
+    //Creating DbOperation object
+    $db = new DbOperation();
+
+    //Creating a response array
+    $response = array();
+
+    //If username password is correct
+    if($db->getDebt($id)){
+
+        //Getting user detail
+        $data = $db->getDebt($id);
+
+        //Generating response
+        $response['error'] = false;
+        $response['debt'] = $student['debt_hour'];
+    }else{
+        //Generating response
+        $response['error'] = true;
+        $response['message'] = "Invalid username or password";
+    }
+    //Displaying the response
+    echoResponse(200,$response);
+	});
 	
-	//todo : method to insert new user with userid and debt
+	//this method will insert new user with userid and debt
 	$app->post('/createuser', function () use ($app) {
 	 
 		//Verifying the required parameters
