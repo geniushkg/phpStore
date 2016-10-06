@@ -24,11 +24,11 @@ class DbOperation {
 			$stmt = $this->con->prepare("SELECT debt_hour FROM userdata WHERE user_id=?");
 			$stmt->bind_param("i",$userId);
 			$stmt->execute();
-			//Getting the student result array
-			$student = $stmt->get_result()->fetch_assoc();
+			//Getting the user result array
+			$user = $stmt->get_result()->fetch_assoc();
 			$stmt->close();
-			//returning the student
-			return $student;
+			//returning the user
+			return $user;
 		}
 
 		
@@ -70,9 +70,9 @@ class DbOperation {
 			$stmt->bind_param("ii",$debt,$userId);
 			$stmt->execute();
 				if($this->db->affected_rows() >= 0){ 
-					return true;
+					return 0;
 				}else{
-					return false;
+					return 1;
 				}
 		}
 	

@@ -137,19 +137,19 @@ function verifyRequiredParams($required_fields)
     //Creating a response array
     $response = array();
 
-    //If username password is correct
-    if($db->getDebt($id)){
+    //If userid true
+    if($db->getDebt($id) != null){
 
         //Getting user detail
         $data = $db->getDebt($id);
 
         //Generating response
         $response['error'] = false;
-        $response['debt'] = $student['debt_hour'];
+        $response['debt'] = $data['debt_hour'];
     }else{
         //Generating response
         $response['error'] = true;
-        $response['message'] = "Invalid username or password";
+        $response['message'] = "Invalid userid no user found";
     }
     //Displaying the response
     echoResponse(200,$response);
