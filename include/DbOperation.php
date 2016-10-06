@@ -22,7 +22,7 @@ class DbOperation
 		
 		
 		//this method will return debt for given userid
-		public function getStudent($userId){
+		public function getDebt($userId){
 			$stmt = $this->con->prepare("SELECT debt_hour FROM userdata WHERE user_id=?");
 			$stmt->bind_param("i",$userId);
 			$stmt->execute();
